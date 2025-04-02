@@ -1,32 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
-import Dashboard from './sections/dashboard';
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Dashboard from "./sections/dashboard";
+import Order from "./sections/orders";  // The component that you want to show when the user clicks "Orders"
 
-function App() {
+// Your Orders page
+
+const App = () => {
   return (
-    // <div className="App">
-    //   <header className="App-header">
-    //     <img src={logo} className="App-logo" alt="logo" />
-    //     <p>
-    //       Edit <code>src/App.js</code> and save to reload.
-    //     </p>
-    //     <a
-    //       className="App-link"
-    //       href="https://reactjs.org"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       Learn React
-    //     </a>
-    //   </header>
-    // </div>
-   
-  //   <div className="bg-red-500 text-white p-6">
-  //   Test Tailwind
-  // </div>
-  <Dashboard/>
-
+    <Routes>
+      <Route path="/" element={<Dashboard />} />
+      <Route path="/orders" element={<Order/>} />
+      {/* Add other routes here */}
+    </Routes>
   );
-}
+};
 
 export default App;
