@@ -13,7 +13,7 @@ const Dashboard = () => {
       icon: "/images/doc.png",
       title: "Customs",
       description: "Manage your customs documents with ease.",
-      link: "/sections/customs",
+      link: "/customs",
     },
     {
       icon: "/images/truck.png",
@@ -25,7 +25,7 @@ const Dashboard = () => {
       icon: "/images/icon.png",
       title: "Loadminds AI",
       description: "An AI-powered tool by LoadMinds for your specific use case.",
-      link: "/sections/ai-tool",
+      link: "/ai-tool",
     },
     {
       icon: "/images/pdf.png",

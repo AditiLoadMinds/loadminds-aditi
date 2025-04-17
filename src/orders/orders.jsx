@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import VerticalNavbar from "../components/vertical-nav";
-import FilterBox1 from "../components/filter";
+import FilterBox from "../components/filter";
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Modal from "../wrapper/Modal";
-import { EditOrder } from "./edit-orders";
+import { EditOrder } from "../sections/edit-orders";
 import { Link } from "react-router-dom";
 
 const ordersData = [
@@ -122,7 +122,7 @@ const ordersData = [
 
 const ORDERS_PER_PAGE = 10;
 
-const Customs = () => {
+const Order = () => {
   const [filteredOrders, setFilteredOrders] = useState(ordersData);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -191,7 +191,7 @@ const Customs = () => {
         {/* Status Filter Buttons */}
         <div className="border-b-2 border-gray-200 w-full">
           <div className="flex flex-row gap-4 ">
-            {["PAPS", "PARS"].map((status) => (
+            {["Delivered", "In Transit", "All"].map((status) => (
               <button
                 key={status}
                 className={`text-md px-4 py-1 r ${
@@ -209,16 +209,16 @@ const Customs = () => {
 
         {/* Search & Filter */}
         <div className="flex flex-row justify-between items-center gap-8 mt-4">
-          <FilterBox1
+          <FilterBox
             data={ordersData}
             onFilterChange={handleFilterChange}
             onSearchChange={handleSearch}
           />
           <button
-            onClick={() => navigate("/new-customs")}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors"
+            onClick={() => navigate("/add-order")}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
           >
-            + New
+            Add Order
           </button>
         </div>
 
@@ -324,4 +324,4 @@ const Customs = () => {
   );
 };
 
-export default Customs;
+export default Order;
