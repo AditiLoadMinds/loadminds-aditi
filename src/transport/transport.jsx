@@ -6,6 +6,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import Modal from "../wrapper/Modal";
 import { EditOrder } from "../sections/edit-orders";
 import { Link } from "react-router-dom";
+import { Pagination } from "../components/pagination";
 
 const transportData = [
   {
@@ -184,8 +185,8 @@ const Transport = () => {
                 key={category}
                 className={`text-md px-4 py-1 r ${
                   selectedCategory === category
-                    ? " text-black"
-                    : "text-gray-600 hover:text-blue-600 "
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                : "text-gray-600 hover:text-blue-600"
                 }`}
                 onClick={() => filterByCategory(category)}
               >
@@ -212,15 +213,15 @@ const Transport = () => {
 
         {/* Transport Table */}
         <div className="mt-4">
-          <table className="border-collapse border border-gray-300 w-full">
+        <table className="border border-gray-300 w-full rounded-xl overflow-hidden">
             <thead>
               <tr className="bg-gray-200">
-                <th className="border p-2">Number</th>
-                <th className="border p-2">Make</th>
-                <th className="border p-2">Model</th>
-                <th className="border p-2">VIN</th>
-                <th className="border p-2">License Plate</th>
-                <th className="border p-2">Actions</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">NUMBER</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">MAKE</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">MODEL</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">VIN</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">LICENSE PLATE</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">ACTIONS</th>
               </tr>
             </thead>
             <tbody>
@@ -238,7 +239,7 @@ const Transport = () => {
                         className="text-blue-600 hover:underline"
                         onClick={handleOpenEdit}
                       >
-                        <FaEdit />
+                        <FaEdit/>
                       </button>
                       </Link>
                       <button
@@ -263,37 +264,7 @@ const Transport = () => {
         </div>
 
         {/* Pagination */}
-        <div className="flex justify-center items-center mt-4 gap-4">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className={`px-4 py-2 text-white rounded-lg ${
-              currentPage === 1
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-600"
-            }`}
-          >
-            Previous
-          </button>
-
-          <span className="text-gray-700 font-semibold">
-            Page {currentPage} of {totalPages}
-          </span>
-
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-            className={`px-4 py-2 text-white rounded-lg ${
-              currentPage === totalPages
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-600"
-            }`}
-          >
-            Next
-          </button>
-        </div>
+        <Pagination/>
       </div>
     </div>
   );

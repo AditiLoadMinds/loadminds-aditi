@@ -19,7 +19,7 @@ const Dashboard = () => {
       icon: "/images/truck.png",
       title: "Transport",
       description: "Truck, Trailers & drivers, all info in one place.",
-      link: "/sections/transport",
+      link: "/transport/overview",
     },
     {
       icon: "/images/icon.png",
@@ -53,7 +53,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-3 gap-6 m-72 mt-20">
         {cards.slice(0, 3).map((card, index) => (
           <Link key={index} to={card.link} className="bg-white rounded-3xl p-6 flex flex-col items-left text-left w-[284px] border border-gray-100">
-            <img src={card.icon} alt={card.title} className="h-12 w-12 mb-4" />
+            <img src={card.icon} alt={card.title} className="h-6 w-6 mb-4" />
             <h2 className="text-lg font-bold mb-2 text-[16px]">{card.title}</h2>
             <p className="text-gray-600 text-[12px]">{card.description}</p>
           </Link>
@@ -62,7 +62,7 @@ const Dashboard = () => {
         <div className="col-span-3 flex justify-center gap-6">
           {cards.slice(3).map((card, index) => (
             <Link key={index} to={card.link} className="bg-white rounded-3xl p-6 flex flex-col items-left w-[284px] text-left border border-gray-100">
-              <img src={card.icon} alt={card.title} className="h-[32px] w-[32px] mb-4" />
+              <img src={card.icon} alt={card.title} className="h-8 w-8 mb-4" />
               <h2 className="text-lg font-bold mb-2 text-[16px]">{card.title}</h2>
               <p className="text-gray-600 text-[12px]">{card.description}</p>
             </Link>

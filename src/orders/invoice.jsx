@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import VerticalNavbar from "../components/vertical-nav";
 import FilterBox from "../components/filter";
 import { useNavigate } from "react-router-dom";
-import { FaEdit, FaTrash } from "react-icons/fa";
 import paymentModal from "../wrapper/paymentModal"
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import Paid from '@mui/icons-material/Paid';
+import AddIcon from '@mui/icons-material/Add';
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const ordersData = [
   {
@@ -35,13 +39,37 @@ const ORDERS_PER_PAGE = 10;
 const Invoice = () => {
   const [filteredOrders, setFilteredOrders] = useState(ordersData);
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  //const [currentPage, setCurrentPage] = useState(1);
   const [selectedStatus, setSelectedStatus] = useState("Unpaid");
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const totalPages = Math.ceil(filteredOrders.length / ORDERS_PER_PAGE);
-  const navigate = useNavigate();
+  //const totalPages = Math.ceil(filteredOrders.length / ORDERS_PER_PAGE);
+  //const navigate = useNavigate();
+    // const totalPages = Math.ceil(filteredOrders.length / ORDERS_PER_PAGE);
+    const navigate = useNavigate();
+    //const entriesPerPage = 20;
+    const totalEntries = 200;
+    const entriesPerPageOptions = [20, 40, 60, 80, 100, 120, 140, 160, 180, 200];
+  
+    // Initialize states
+    const [entriesPerPage, setEntriesPerPage] = useState(20);
+    const [currentPage, setCurrentPage] = useState(1);
+  
+    // Calculate total pages
+    const totalPages = Math.ceil(totalEntries / entriesPerPage);
+  
+    // Handle "Go to Page" input
+    const handleGoToPage = (e) => {
+      const page = Math.min(Math.max(parseInt(e.target.value), 1), totalPages);
+      setCurrentPage(page);
+    };
 
+    // Handle Entries per page change
+  const handleEntriesPerPageChange = (e) => {
+    const newEntriesPerPage = parseInt(e.target.value);
+    setEntriesPerPage(newEntriesPerPage);
+    setCurrentPage(1); // Reset to page 1 when entries per page change
+  };
   const filterByStatus = (status) => {
     setSelectedStatus(status);
     const filtered =
@@ -92,31 +120,30 @@ const Invoice = () => {
     <div className="h-screen flex">
       <VerticalNavbar />
       <div className="w-full h-auto m-10">
-        <div className="border-b-2 border-gray-200 w-full">
-          <div className="flex flex-row gap-4 ">
-            <button
-              className={`text-md px-4 py-1 ${
-                selectedStatus === "Unpaid"
-                  ? "text-black"
-                  : "text-gray-600 hover:text-blue-600"
-              }`}
-              onClick={() => filterByStatus("Unpaid")}
-            >
-              Unpaid
-            </button>
-            <button
-              className={`text-md px-4 py-1 ${
-                selectedStatus === "Paid"
-                  ? "text-black"
-                  : "text-gray-600 hover:text-blue-600"
-              }`}
-              onClick={() => filterByStatus("Paid")}
-            >
-              Paid
-            </button>
-          </div>
+      <div className="border-b-2 border-gray-200 w-full">
+        <div className="flex flex-row gap-4 ">
+          <button
+            className={`text-md px-4 py-1 ${
+              selectedStatus === "Unpaid"
+                ? "text-blue-600 border-b-2 border-blue-600"
+                : "text-gray-600 hover:text-blue-600"
+            }`}
+            onClick={() => filterByStatus("Unpaid")}
+          >
+            Unpaid
+          </button>
+          <button
+            className={`text-md px-4 py-1 ${
+              selectedStatus === "Paid"
+                ? "text-blue-600 border-b-2 border-blue-600"
+                : "text-gray-600 hover:text-blue-600"
+            }`}
+            onClick={() => filterByStatus("Paid")}
+          >
+            Paid
+          </button>
         </div>
-
+      </div>
         <div className="flex flex-row justify-between items-center gap-8 mt-4">
           <FilterBox
             data={ordersData}
@@ -126,7 +153,7 @@ const Invoice = () => {
             onClick={() => navigate("/add-order")}
             className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
           >
-            Add Order
+            <AddIcon/> Add Invoice
           </button>
         </div>
 
@@ -134,13 +161,13 @@ const Invoice = () => {
           <table className="border-collapse border border-gray-300 w-full">
             <thead>
               <tr className="bg-gray-200">
-                <th className="border p-2">Invoice ID</th>
-                <th className="border p-2">Order ID</th>
-                <th className="border p-2">Company</th>
-                <th className="border p-2">Pickup Location</th>
-                <th className="border p-2">Invoice Date</th>
-                <th className="border p-2">Payment Date</th>
-                {selectedStatus === "Unpaid" && <th className="border p-2">Actions</th>}
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">ORDER ID</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">COMPANY</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">PICKUP LOCATION</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">INVOICE ID</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">INVOICE DATE</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">PAYMENT DATE</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">ACTIONS</th>
               </tr>
             </thead>
             <tbody>
@@ -154,13 +181,39 @@ const Invoice = () => {
                   <td className="border p-2">{order.paymentDate || "N/A"}</td>
                   {selectedStatus === "Unpaid" && (
                     <td className="border p-2">
-                      <button
-                        onClick={() => handleMarkAsPaid(order)}
-                        className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-sm"
-                      >
-                        Mark as Paid
+                    <div className="flex gap-4 justify-center items-center text-xl">
+                      <button onClick={() => handleMarkAsPaid(order)}>
+                        <Paid style={{ color: 'blue', fontSize: 18 }} />
                       </button>
-                    </td>
+                      <Link to="/customs/edit-customs">
+                      <button >
+                        <FaEdit style={{ color: 'blue', fontSize: 16 }} />
+                      </button>
+                      </Link>
+                      <button onClick={() => handleMarkAsPaid(order)}>
+                        <FaTrash style={{ color: 'red', fontSize: 16 }} />
+                      </button>
+                    </div>
+                  </td>
+                  
+                  )}
+                  {/* Actions for Paid Orders */}
+                  {selectedStatus === "Paid" && (
+                    <td className="border p-2">
+                    <div className="flex gap-4 justify-center items-center text-xl">
+                    <Link to="/customs/edit-customs">
+                      <button >
+                        <FaEdit style={{ color: 'blue', fontSize: 16 }} />
+                      </button>
+                      </Link>
+                      <Link>
+                      <button onClick={() => handleMarkAsPaid(order)}>
+                        <FaTrash style={{ color: 'red', fontSize: 16 }} />
+                      </button>
+                      </Link>
+                    </div>
+                  </td>
+                  
                   )}
                 </tr>
               ))}
@@ -176,36 +229,90 @@ const Invoice = () => {
         </div>
 
         <div className="flex justify-center items-center mt-4 gap-4">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className={`px-4 py-2 text-white rounded-lg ${
-              currentPage === 1
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-600"
-            }`}
-          >
-            Previous
-          </button>
+      {/* Showing Entries Text */}
+      <div className="flex gap-4 items-center">
+        <span className="text-gray-700">
+          Showing {(currentPage - 1) * entriesPerPage + 1} to {Math.min(currentPage * entriesPerPage, totalEntries)} of {totalEntries} entries
+        </span>
 
-          <span className="text-gray-700 font-semibold">
-            Page {currentPage} of {totalPages}
-          </span>
+        {/* Previous Button */}
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className={`px-4 py-2 text-black rounded-lg ${
+            currentPage === 1
+              ? "cursor-not-allowed"
+              : ""
+          }`}
+        >
+          {"<"}
+        </button>
 
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-            className={`px-4 py-2 text-white rounded-lg ${
-              currentPage === totalPages
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-600"
-            }`}
-          >
-            Next
-          </button>
+        {/* Page Numbers */}
+        <div className="flex gap-2">
+          {Array.from({ length: 5 }, (_, index) => {
+            const page = Math.min(currentPage - (currentPage % 5) + index + 1, totalPages);
+            return (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`px-3 py-1 rounded-full text-lg ${
+                  page === currentPage
+                    ? "bg-blue-300 text-white"
+                    : " hover:bg-gray-400"
+                }`}
+              >
+                {page}
+              </button>
+            );
+          })}
         </div>
+
+        {/* Next Button */}
+        <button
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+          className={`px-4 py-2 text-black rounded-lg ${
+            currentPage === totalPages
+              ? " cursor-not-allowed"
+              : ""
+          }`}
+        >
+          {">"}
+        </button>
+      </div>
+
+      {/* "Go to Page" Input */}
+      <div className="flex items-center gap-4">
+        <label htmlFor="goToPage" className="text-gray-700">Go to page:</label>
+        <input
+          type="number"
+          id="goToPage"
+          min="1"
+          max={totalPages}
+          value={currentPage}
+          onChange={handleGoToPage}
+          className="px-3 py-1 border rounded"
+        />
+      </div>
+
+      {/* Entries Per Page Dropdown */}
+      <div className="flex items-center gap-4">
+        <label htmlFor="entriesPerPage" className="text-gray-700">Entries per page:</label>
+        <select
+          id="entriesPerPage"
+          value={entriesPerPage}
+          onChange={handleEntriesPerPageChange}
+          className="px-3 py-1 border rounded"
+        >
+          {entriesPerPageOptions.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
       </div>
 
       {showPaymentModal && (

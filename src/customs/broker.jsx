@@ -6,6 +6,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import Modal from "../wrapper/Modal";
 import { EditOrder } from "../sections/edit-orders";
 import { Link } from "react-router-dom";
+import { Pagination } from "../components/pagination";
 
 // Expanded Broker Data
 const brokersData = [
@@ -208,11 +209,11 @@ const Broker = () => {
           <table className="border-collapse border border-gray-300 w-full">
             <thead>
               <tr className="bg-gray-200 text-center">
-                <th className="border p-2">Broker Name</th>
-                <th className="border p-2">PAPS Email</th>
-                <th className="border p-2">PARS Email</th>
-                <th className="border p-2">Contact</th>
-                <th className="border p-2">Actions</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">BROKER NAME</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">PAPS EMAIL</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">PARS EMAIL</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">CONTACT</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">ACTIONS</th>
               </tr>
             </thead>
             <tbody>
@@ -257,37 +258,7 @@ const Broker = () => {
         </div>
 
         {/* Pagination */}
-        <div className="flex justify-center items-center mt-4 gap-4">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className={`px-4 py-2 text-white rounded-lg ${
-              currentPage === 1
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-600"
-            }`}
-          >
-            Previous
-          </button>
-
-          <span className="text-gray-700 font-semibold">
-            Page {currentPage} of {totalPages}
-          </span>
-
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-            className={`px-4 py-2 text-white rounded-lg ${
-              currentPage === totalPages
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-600"
-            }`}
-          >
-            Next
-          </button>
-        </div>
+        <Pagination/>
       </div>
     </div>
   );

@@ -3,8 +3,8 @@ import VerticalNavbar from "../components/vertical-nav";
 import FilterBox from "../components/filter";
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
-
 import { Link } from "react-router-dom";
+import { Pagination } from "../components/pagination";
 
 const driverData = [
     {
@@ -178,23 +178,23 @@ const Driver = () => {
           <table className="border-collapse border border-gray-300 w-full">
           <thead>
   <tr className="bg-gray-200">
-    <th className="border p-2">Name</th>
-    <th className="border p-2">Date of Birth</th>
-    <th className="border p-2">License Number</th>
-    <th className="border p-2">Address</th>
-    <th className="border p-2">Phone</th>
-    <th className="border p-2">Email</th>
-    <th className="border p-2">Actions</th>
+    <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">NAME</th>
+    <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">DATE OF BIRTH</th>
+    <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">LICENSE NUMBER</th>
+    <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">ADDRESS</th>
+    <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">PHONE</th>
+    <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">EMAIL</th>
+    <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">ACTIONS</th>
   </tr>
 </thead>
 <tbody>
   {paginatedTransports.map((driver) => (
     <tr key={driver.id} className="text-center">
-      <td className="border p-2">{driver.name}</td>
       <td className="border p-2">{driver.dob}</td>
       <td className="border p-2">{driver.licenseNumber}</td>
       <td className="border p-2">{driver.address}</td>
       <td className="border p-2">{driver.phone}</td>
+      <td className="border p-2">{driver.name}</td>
       <td className="border p-2">{driver.email}</td>
       <td className="border p-2">
         <div className="flex justify-center gap-4">
@@ -223,37 +223,7 @@ const Driver = () => {
         </div>
 
         {/* Pagination */}
-        <div className="flex justify-center items-center mt-4 gap-4">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className={`px-4 py-2 text-white rounded-lg ${
-              currentPage === 1
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-600"
-            }`}
-          >
-            Previous
-          </button>
-
-          <span className="text-gray-700 font-semibold">
-            Page {currentPage} of {totalPages}
-          </span>
-
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-            className={`px-4 py-2 text-white rounded-lg ${
-              currentPage === totalPages
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-600"
-            }`}
-          >
-            Next
-          </button>
-        </div>
+        <Pagination/>
       </div>
     </div>
   );

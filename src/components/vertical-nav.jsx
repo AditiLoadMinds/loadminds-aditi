@@ -39,7 +39,7 @@ const VerticalNavbar = () => {
       <ul className="flex flex-col h-full space-y-4">
         <li>
           <div className="flex items-center">
-            <img src="/images/logo1.png" className='h-14 w-14' alt="logo" />
+            <img src="/images/logo1.png" className='h-10 w-14' alt="logo" />
             {expanded && <img src='/images/main.png' className='w-28 h-6 m-auto' alt="main" />}
           </div>
         </li>
@@ -58,9 +58,8 @@ const VerticalNavbar = () => {
           </a>
           {expanded && dropdowns.orders && (
             <div className="ml-10 mt-2 space-y-2">
+              <Link to="/orders" className="block py-1 px-2 hover:bg-gray-700 rounded">Overview</Link>
               <Link to="/orders/invoice" className="block py-1 px-2 hover:bg-gray-700 rounded">Invoice</Link>
-              <Link to="/orders/overview" className="block py-1 px-2 hover:bg-gray-700 rounded">Overview</Link>
-              <Link to="/orders/pod" className="block py-1 px-2 hover:bg-gray-700 rounded">POD</Link>
             </div>
           )}
         </li>
@@ -101,21 +100,21 @@ const VerticalNavbar = () => {
             <div className="ml-10 mt-2 space-y-2">
               <Link to="/transport/overview" className="block py-1 px-2 hover:bg-gray-700 rounded">Overview</Link>
               <Link to="/transport/driver" className="block py-1 px-2 hover:bg-gray-700 rounded">Driver</Link>
-              <Link to="/transport/payment" className="block py-1 px-2 hover:bg-gray-700 rounded">Payment</Link>
+              <Link to="/transport/expense" className="block py-1 px-2 hover:bg-gray-700 rounded">Payment</Link>
             </div>
           )}
         </li>
         
         <li>
           <Link to="/ai-tool" className="hover:bg-[#2771D1] p-2 rounded-lg flex items-center">
-            <img src="/images/icon1.png" alt="contact" className="w-8 h-8" />
+            <img src="/images/icon1.png" alt="contact" className="w-6 h-6" />
             {expanded && <span className="ml-3">LOADMINDS AI</span>}
           </Link>
         </li>
         
         <li>
           <Link to="/contact" className="hover:bg-[#2771D1] p-2 rounded-lg flex items-center">
-            <img src="/images/pdf1.png" alt="pdf" className="w-8 h-8" />
+            <img src="/images/pdf1.png" alt="pdf" className="w-6 h-6" />
             {expanded && <span className="ml-3">PDF Editor</span>}
           </Link>
         </li>

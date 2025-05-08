@@ -6,6 +6,10 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import Modal from "../wrapper/Modal";
 import { EditOrder } from "./edit-orders";
 import { Link } from "react-router-dom";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Pagination } from "../components/pagination";
+import Add from "@mui/icons-material/Add";
 
 const ordersData = [
   {
@@ -130,6 +134,10 @@ const Customs = () => {
   const [selectedStatus, setSelectedStatus] = useState("All");
   const totalPages = Math.ceil(filteredOrders.length / ORDERS_PER_PAGE);
   const navigate = useNavigate();
+  const handleDelete = (id) => {
+    const updatedOrders = filteredOrders.filter((order) => order.id !== id);
+    setFilteredOrders(updatedOrders);
+  };
 
   const filterByStatus = (status) => {
     setSelectedStatus(status);
@@ -196,8 +204,8 @@ const Customs = () => {
                 key={status}
                 className={`text-md px-4 py-1 r ${
                   selectedStatus === status
-                    ? " text-black"
-                    : "text-gray-600 hover:text-blue-600 "
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-600 hover:text-blue-600"
                 }`}
                 onClick={() => filterByStatus(status)}
               >
@@ -216,23 +224,23 @@ const Customs = () => {
           />
           <button
             onClick={() => navigate("/new-customs")}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-5 rounded-lg transition-colors"
           >
-            + New
+            <Add size="small"/> New
           </button>
         </div>
 
         {/* Order Table */}
         <div className="mt-4">
-          <table className="border-collapse border border-gray-300 w-full">
+          <table className="border-collapse border border-gray-300 w-full overflow-hidden rounded-xl">
             <thead>
               <tr className="bg-gray-200">
-                <th className="border p-2">Customer Order No</th>
-                <th className="border p-2">Order No</th>
-                <th className="border p-2">Company</th>
-                <th className="border p-2">Pickup Location</th>
-                <th className="border p-2">Delivery Date</th>
-                <th className="border p-2">Actions</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">CUSTOMER NO.</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">ORDER NO.</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">COMPANY</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">PICKUP LOCATION</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">DELIVERY DATE</th>
+                <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">ACTIONS</th>
               </tr>
             </thead>
             <tbody>
@@ -244,35 +252,48 @@ const Customs = () => {
                   <td className="border p-2">{order.pickupLocation}</td>
                   <td className="border p-2">{order.deliveryDate}</td>
                   <td className="border p-2">
-                <div className="flex justify-center gap-4">
-                  {order.status === "Delivered" ? (
-                    <Link to="/add-pod">
-                    <button className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm">
-                      Send POD
-                    </button></Link>
-                  ) : (
-                    <>
-                      <button
-                        className="text-blue-600 hover:underline"
-                        onClick={handleOpenEdit}
-                      >
-                        <FaEdit />
-                      </button>
+  <div className="flex justify-center gap-4">
+    {order.status === "Delivered" ? (
+      <div className="flex justify-center align-middle items-center gap-4">
+        <button
+          className="text-blue-600 hover:underline"
+          onClick={handleOpenEdit}
+        >
+          <FaEdit  />
+        </button>
+        <button
+          className="text-red-600 hover:text-red-800"
+          title="Delete"
+          onClick={() => handleDelete(order.id)} // Assuming handleDelete will delete the order
+        >
+          <FaTrash  />
+        </button>
+      </div>
+    ) : (
+      <>
+        <button
+          className="text-blue-600 hover:underline"
+          onClick={handleOpenEdit}
+        >
+          <EditIcon fontSize="small" />
+        </button>
 
-                      <Modal isOpen={showEditModal} onClose={handleCloseEdit}>
-                        <EditOrder onClose={handleCloseEdit} />
-                      </Modal>
+        <Modal isOpen={showEditModal} onClose={handleCloseEdit}>
+          <EditOrder onClose={handleCloseEdit} />
+        </Modal>
 
-                      <button
-                        className="text-red-600 hover:text-red-800"
-                        title="Delete"
-                      >
-                        <FaTrash />
-                      </button>
-                    </>
-                  )}
-                </div>
-              </td>
+        <button
+          className="text-red-600 hover:text-red-800"
+          title="Delete"
+          onClick={() => handleDelete(order.id)} // Assuming handleDelete will delete the order
+        >
+          <DeleteIcon fontSize="small" />
+        </button>
+      </>
+    )}
+  </div>
+</td>
+
 
                 </tr>
               ))}
@@ -288,37 +309,7 @@ const Customs = () => {
         </div>
 
         {/* Pagination */}
-        <div className="flex justify-center items-center mt-4 gap-4">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className={`px-4 py-2 text-white rounded-lg ${
-              currentPage === 1
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-600"
-            }`}
-          >
-            Previous
-          </button>
-
-          <span className="text-gray-700 font-semibold">
-            Page {currentPage} of {totalPages}
-          </span>
-
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-            className={`px-4 py-2 text-white rounded-lg ${
-              currentPage === totalPages
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-600"
-            }`}
-          >
-            Next
-          </button>
-        </div>
+        <Pagination/>
       </div>
     </div>
   );

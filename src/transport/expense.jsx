@@ -3,8 +3,12 @@ import VerticalNavbar from "../components/vertical-nav";
 import FilterBox from "../components/filter";
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Link } from "react-router-dom";
 import PayCalculatorModal from "../wrapper/paycalc";
+import { Pagination } from "../components/pagination";
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 const TRANSPORTS_PER_PAGE = 10;
 
 const driverExpenses = [
@@ -129,7 +133,7 @@ const Expense = () => {
                   key={cat}
                   className={`text-md px-4 py-1 ${
                     category === cat
-                      ? "text-black border-b-2 border-black font-semibold"
+                      ? "text-blue-600 border-b-2 border-blue-600"
                       : "text-gray-600 hover:text-blue-600"
                   }`}
                   onClick={() => handleCategoryChange(cat)}
@@ -147,14 +151,20 @@ const Expense = () => {
             />
             <div className="flex flex-row gap-2">
               {category === "Expenses" && (
-                <><button
-                                onClick={() => setIsPayModalOpen(true)}
-                                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg"
-                            >
-                                Pay Calculator
-                            </button><PayCalculatorModal
-                                    isOpen={isPayModalOpen}
-                                    onClose={() => setIsPayModalOpen(false)} /></>
+                <>
+                <button
+                  onClick={() => setIsPayModalOpen(true)}
+                  className="bg-white hover:bg-blue-600 hover:text-white border border-gray-200 text-black px-4 py-2 rounded-lg flex items-center gap-2"
+                >
+                  <AttachMoneyIcon />
+                  Pay Calculator
+                </button>
+          
+                <PayCalculatorModal
+                  isOpen={isPayModalOpen}
+                  onClose={() => setIsPayModalOpen(false)}
+                />
+              </>
               )}
               <button
                 onClick={() => navigate("/transport/add-expense")}
@@ -165,30 +175,30 @@ const Expense = () => {
             </div>
           </div>
   
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto mt-4">
             <table className="border-collapse border border-gray-300 w-full">
               <thead>
                 <tr className="bg-gray-200 text-center">
                   {category === "Expenses" ? (
                     <>
-                      <th className="border p-2">Expense Name</th>
-                      <th className="border p-2">Truck</th>
-                      <th className="border p-2">Driver</th>
-                      <th className="border p-2">Currency</th>
-                      <th className="border p-2">Price</th>
-                      <th className="border p-2">Date</th>
-                      <th className="border p-2">Actions</th>
+                      <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">Truck</th>
+                      <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">Expense Name</th>
+                      <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">Driver</th>
+                      <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">Currency</th>
+                      <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">Price</th>
+                      <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">Date</th>
+                      <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">Actions</th>
                     </>
                   ) : (
                     <>
-                      <th className="border p-2">Order ID</th>
-                      <th className="border p-2">Truck</th>
-                      <th className="border p-2">Currency</th>
-                      <th className="border p-2">Price</th>
-                      <th className="border p-2">Pickup Date</th>
-                      <th className="border p-2">Pickup Location</th>
-                      <th className="border p-2">Delivery Date</th>
-                      <th className="border p-2">Actions</th>
+                      <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">Order ID</th>
+                      <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">Truck</th>
+                      <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">Currency</th>
+                      <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">Price</th>
+                      <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">Pickup Date</th>
+                      <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">Pickup Location</th>
+                      <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">Delivery Date</th>
+                      <th className="border p-4 font-medium text-sm leading-[16px] tracking-wide font-sans">Actions</th>
                     </>
                   )}
                 </tr>
@@ -238,29 +248,7 @@ const Expense = () => {
           </div>
   
           {/* Pagination */}
-          <div className="flex justify-center items-center mt-4 gap-4">
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className={`px-4 py-2 text-white rounded-lg ${
-                currentPage === 1 ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
-              }`}
-            >
-              Previous
-            </button>
-            <span className="text-gray-700 font-semibold">
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages}
-              className={`px-4 py-2 text-white rounded-lg ${
-                currentPage === totalPages ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
-              }`}
-            >
-              Next
-            </button>
-          </div>
+          <Pagination/>
         </div>
       </div>
     );

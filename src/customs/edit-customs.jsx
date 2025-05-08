@@ -135,7 +135,7 @@ export const EditCustoms = () => {
 
   // Handle back button click
   const handleBackClick = () => {
-    navigate('/orders');
+    navigate('/orders/invoice');
   };
 
   // Handle file download/view
@@ -165,7 +165,7 @@ export const EditCustoms = () => {
           onClick={handleBackClick}
           aria-label="Go back"
         >
-          <span className="mr-2">←</span> Adding Customs
+          <span className="mr-2">←</span> Editing Customs
         </button>
       </header>
       <main>

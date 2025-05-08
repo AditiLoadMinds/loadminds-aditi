@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaSearch, FaTimes } from "react-icons/fa";
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 const FilterBox1 = ({ data, onFilterChange, onSearchChange = () => {} }) => {
   const [filterColumn, setFilterColumn] = useState("");
@@ -28,23 +29,26 @@ const FilterBox1 = ({ data, onFilterChange, onSearchChange = () => {} }) => {
     <div className="flex gap-4 mt-4 items-center flex-wrap">
       {/* Column Selector */}
       <div>
-        <label className="block text-gray-600 font-semibold mb-1">Filter By</label>
-        <select
-          onChange={(e) => handleFilterChange(e.target.value)}
-          className="border rounded-lg px-3 py-2 bg-white"
-        >
-          <option value="">None</option>
+      <div className="flex items-center border rounded-lg px-3 py-2 bg-white">
+          <FilterListIcon style={{ fontSize: 16, marginRight: 8 , color: "gray"}} />
+          <select
+            onChange={(e) => handleFilterChange(e.target.value, "")}
+            className="outline-none bg-transparent w-full text-gray-500"
+          >
+        
+          <option value="">Filter(0)</option>
           <option value="brokerName">Broker Name</option>
           <option value="papsEmail">PAPS Email</option>
           <option value="parsEmail">PARS Email</option>
           <option value="contact">Contact</option>
         </select>
+        </div>
       </div>
 
       {/* Value Selector */}
       {filterColumn && (
         <div>
-          <label className="block text-gray-600 font-semibold mb-1">Select Value</label>
+          
           <select
             onChange={(e) => handleFilterChange(filterColumn, e.target.value)}
             className="border rounded-lg px-3 py-2 bg-white"
@@ -62,7 +66,6 @@ const FilterBox1 = ({ data, onFilterChange, onSearchChange = () => {} }) => {
 
       {/* Search */}
       <div className="relative">
-        <label className="block text-gray-600 font-semibold mb-1">Search</label>
         <div className="flex items-center border rounded-lg px-3 py-2 bg-white">
           <FaSearch className="text-gray-500 mr-2" />
           <input

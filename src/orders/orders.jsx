@@ -2,10 +2,16 @@ import React, { useState } from "react";
 import VerticalNavbar from "../components/vertical-nav";
 import FilterBox from "../components/filter";
 import { useNavigate } from "react-router-dom";
-import { FaEdit, FaTrash } from "react-icons/fa";
+// import { FaEdit, FaTrash } from "react-icons/fa";
 import Modal from "../wrapper/Modal";
 import { EditOrder } from "../sections/edit-orders";
+import { EditPOD } from "../sections/edit-pod";
 import { Link } from "react-router-dom";
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
+import { FaEdit, FaTrash } from "react-icons/fa";
+import Edit from "@mui/icons-material/Edit";
 
 const ordersData = [
   {
@@ -125,11 +131,33 @@ const ORDERS_PER_PAGE = 10;
 const Order = () => {
   const [filteredOrders, setFilteredOrders] = useState(ordersData);
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("All");
-  const totalPages = Math.ceil(filteredOrders.length / ORDERS_PER_PAGE);
+  // const totalPages = Math.ceil(filteredOrders.length / ORDERS_PER_PAGE);
   const navigate = useNavigate();
+  //const entriesPerPage = 20;
+  const totalEntries = 200;
+  const entriesPerPageOptions = [20, 40, 60, 80, 100, 120, 140, 160, 180, 200];
+
+  // Initialize states
+  const [entriesPerPage, setEntriesPerPage] = useState(20);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(totalEntries / entriesPerPage);
+
+  // Handle "Go to Page" input
+  const handleGoToPage = (e) => {
+    const page = Math.min(Math.max(parseInt(e.target.value), 1), totalPages);
+    setCurrentPage(page);
+  };
+
+  // Handle Entries per page change
+  const handleEntriesPerPageChange = (e) => {
+    const newEntriesPerPage = parseInt(e.target.value);
+    setEntriesPerPage(newEntriesPerPage);
+    setCurrentPage(1); // Reset to page 1 when entries per page change
+  };
 
   const filterByStatus = (status) => {
     setSelectedStatus(status);
@@ -196,8 +224,8 @@ const Order = () => {
                 key={status}
                 className={`text-md px-4 py-1 r ${
                   selectedStatus === status
-                    ? " text-black"
-                    : "text-gray-600 hover:text-blue-600 "
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-600 hover:text-blue-600"
                 }`}
                 onClick={() => filterByStatus(status)}
               >
@@ -218,23 +246,36 @@ const Order = () => {
             onClick={() => navigate("/add-order")}
             className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
           >
+            <AddIcon/>
             Add Order
           </button>
         </div>
 
         {/* Order Table */}
         <div className="mt-4">
-          <table className="border-collapse border border-gray-300 w-full">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="border p-2">Customer Order No</th>
-                <th className="border p-2">Order No</th>
-                <th className="border p-2">Company</th>
-                <th className="border p-2">Pickup Location</th>
-                <th className="border p-2">Delivery Date</th>
-                <th className="border p-2">Actions</th>
-              </tr>
-            </thead>
+        <table className=" border-2 border-gray-600 w-full rounded-2xl overflow-hidden">
+        <thead className="m-4">
+          <tr className="bg-gray-200 ">
+            <th className="border p-4 font-medium text-[12px] leading-[16px] tracking-wide font-sans">
+              CUSTOMER ORDER NO.
+            </th>
+            <th className="border p-4 font-medium text-[12px] leading-[16px] tracking-wide font-sans">
+              ORDER NO.
+            </th>
+            <th className="border p-4 font-medium text-[12px] leading-[16px] tracking-wide font-sans">
+              COMPANY
+            </th>
+            <th className="border p-4 font-medium text-[12px] leading-[16px] tracking-wide font-sans">
+              PICKUP LOCATION
+            </th>
+            <th className="border p-4 font-medium text-[12px] leading-[16px] tracking-wide font-sans">
+              DELIVERY DATE
+            </th>
+            <th className="border p-4 font-medium text-[12px] leading-[16px] tracking-wide font-sans">
+              ACTIONS
+            </th>
+          </tr>
+        </thead>
             <tbody>
               {paginatedOrders.map((order) => (
                 <tr key={order.id} className="text-center">
@@ -246,17 +287,31 @@ const Order = () => {
                   <td className="border p-2">
                 <div className="flex justify-center gap-4">
                   {order.status === "Delivered" ? (
-                    <Link to="/add-pod">
-                    <button className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm">
-                      Send POD
-                    </button></Link>
+                    <>
+
+                      <Link to="/add-pod">
+                      <button className="  py-1 rounded text-blue-600 text-sm flex items-center justify-center">
+                        <Edit  />
+                      </button>
+                    </Link>
+                    <button
+                        className="text-blue-600 hover:underline"
+                        onClick={handleOpenEdit}
+                      >
+                        <FaEdit  />
+                      </button>
+                      <Modal isOpen={showEditModal} onClose={handleCloseEdit}>
+                        <EditPOD onClose={handleCloseEdit} />
+                      </Modal>
+                      
+                  </>
                   ) : (
                     <>
                       <button
                         className="text-blue-600 hover:underline"
                         onClick={handleOpenEdit}
                       >
-                        <FaEdit />
+                        <FaEdit  />
                       </button>
 
                       <Modal isOpen={showEditModal} onClose={handleCloseEdit}>
@@ -267,7 +322,7 @@ const Order = () => {
                         className="text-red-600 hover:text-red-800"
                         title="Delete"
                       >
-                        <FaTrash />
+                        <FaTrash  />
                       </button>
                     </>
                   )}
@@ -289,36 +344,90 @@ const Order = () => {
 
         {/* Pagination */}
         <div className="flex justify-center items-center mt-4 gap-4">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className={`px-4 py-2 text-white rounded-lg ${
-              currentPage === 1
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-600"
-            }`}
-          >
-            Previous
-          </button>
+      {/* Showing Entries Text */}
+      <div className="flex gap-4 items-center">
+        <span className="text-gray-700">
+          Showing {(currentPage - 1) * entriesPerPage + 1} to {Math.min(currentPage * entriesPerPage, totalEntries)} of {totalEntries} entries
+        </span>
 
-          <span className="text-gray-700 font-semibold">
-            Page {currentPage} of {totalPages}
-          </span>
+        {/* Previous Button */}
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className={`px-4 py-2 text-black rounded-lg ${
+            currentPage === 1
+              ? "cursor-not-allowed"
+              : ""
+          }`}
+        >
+          {"<"}
+        </button>
 
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-            className={`px-4 py-2 text-white rounded-lg ${
-              currentPage === totalPages
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-600"
-            }`}
-          >
-            Next
-          </button>
+        {/* Page Numbers */}
+        <div className="flex gap-2">
+          {Array.from({ length: 5 }, (_, index) => {
+            const page = Math.min(currentPage - (currentPage % 5) + index + 1, totalPages);
+            return (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`px-3 py-1 rounded-full text-lg ${
+                  page === currentPage
+                    ? "bg-blue-300 text-white"
+                    : " hover:bg-gray-400"
+                }`}
+              >
+                {page}
+              </button>
+            );
+          })}
         </div>
+
+        {/* Next Button */}
+        <button
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+          className={`px-4 py-2 text-black rounded-lg ${
+            currentPage === totalPages
+              ? " cursor-not-allowed"
+              : ""
+          }`}
+        >
+          {">"}
+        </button>
+      </div>
+
+      {/* "Go to Page" Input */}
+      <div className="flex items-center gap-4">
+        <label htmlFor="goToPage" className="text-gray-700">Go to page:</label>
+        <input
+          type="number"
+          id="goToPage"
+          min="1"
+          max={totalPages}
+          value={currentPage}
+          onChange={handleGoToPage}
+          className="px-3 py-1 border rounded"
+        />
+      </div>
+
+      {/* Entries Per Page Dropdown */}
+      <div className="flex items-center gap-4">
+        <label htmlFor="entriesPerPage" className="text-gray-700">Entries per page:</label>
+        <select
+          id="entriesPerPage"
+          value={entriesPerPage}
+          onChange={handleEntriesPerPageChange}
+          className="px-3 py-1 border rounded"
+        >
+          {entriesPerPageOptions.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
       </div>
     </div>
   );
